@@ -15,23 +15,25 @@ class User < ActiveRecord::Base
               format: {with: /^[\w+\-.]+@[a-z\d\-.]+\.[a-z]+$/i, multiline: true},
               uniqueness: {case_sensitive: false}
 
-    after_update :refresh_total_points
-
-
-
+    scope :paginate_limit, -> {
+            limit(per_page)
+    }
 
     def self.by_total_points
         order('total_points desc')
     end
 
-    def self.page
-        
+    def self.page(page_number)
+        page_number||=1
+
+        offset_number = (page_number - 1) * per_page
+
+        offset(offset_number).paginate_limit
     end
 
-    def per_page
+    def self.per_page
         10
     end
-
 
 
     def full_name
@@ -40,8 +42,5 @@ class User < ActiveRecord::Base
 
     private
 
-    def refresh_total_points
-        self.total_points = User.find(self.id).total_points
-    end
 
 end
