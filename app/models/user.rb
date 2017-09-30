@@ -15,9 +15,8 @@ class User < ActiveRecord::Base
               format: {with: /^[\w+\-.]+@[a-z\d\-.]+\.[a-z]+$/i, multiline: true},
               uniqueness: {case_sensitive: false}
 
-    validates :total_points,
-              presence: true,
-              numericality: {minimum: 0}
+    after_update :refresh_total_points
+
 
 
 
@@ -25,10 +24,24 @@ class User < ActiveRecord::Base
         order('total_points desc')
     end
 
+    def self.page
+        
+    end
+
+    def per_page
+        10
+    end
+
 
 
     def full_name
         "#{first_name} #{last_name}"
+    end
+
+    private
+
+    def refresh_total_points
+        self.total_points = User.find(self.id).total_points
     end
 
 end
