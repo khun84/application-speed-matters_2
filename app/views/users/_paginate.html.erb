@@ -1,0 +1,19 @@
+<% if @users.present? %>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item <%= @paginate.previous_class %>">
+                <a class="page-link" href="<%= paginate_path(@paginate.get_start_page-1) %>">Previous</a>
+            </li>
+    
+            <% (@paginate.get_start_page..@paginate.get_end_page).to_a.each do |page| %>
+                <li class="page-item <%= @paginate.active_class(page) %>">
+                    <a class="page-link" href="<%= paginate_path(page) %>"><%= page %></a>
+                </li>
+            <% end %>
+    
+            <li class="page-item <%= @paginate.next_class %>">
+                <a class="page-link" tabindex="-1" href="<%= paginate_path(@paginate.get_end_page + 1)%>">Next</a>
+            </li>
+        </ul>
+    </nav>
+<% end %>
